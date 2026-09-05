@@ -11,3 +11,45 @@ The work can produce three major public artifacts:
 3. **RDNA4 Support for Georgia Tech MacSim + Research Paper** — transfer the experimentally derived model into an established cycle-level architectural simulator, validate MacSim's predictions against real hardware, and package the methodology and results as a publishable architecture research project.
 
 Together these form a coherent progression: **measure the real GPU → infer its microarchitecture → build and validate a predictive model → integrate that model into a research-grade simulator.**
+
+A good top-level decomposition is:
+
+Execution pipelines
+Instruction latency
+Instruction throughput / issue rate
+Dependency behavior
+Wave scheduling
+LDS/shared memory
+Cache hierarchy
+Global memory latency/bandwidth
+Control flow / branches
+Special-function units
+Resource limits / occupancy
+Cross-wave / cross-CU effects
+
+For latency:
+
+For example, suppose the hardware can forward the result after 5 cycles even though the instruction formally “completes” later. Your dependency chain measures the 5-cycle forwarding latency, which is exactly the useful number for a performance simulator.
+
+Some instructions also need special treatment. Loads, atomics, branches, matrix operations, and variable-latency instructions may not have one fixed latency at all. A global load might be 20 cycles on one cache hit and hundreds on a DRAM access. For those, you characterize a distribution or a latency by memory level rather than putting one number in the table.
+
+For each instruction:
+
+1. Generate dependent chains of N = 32,64,128,256,512
+2. Run many repetitions
+3. Record total cycles
+4. Fit linear regression:
+      cycles = intercept + latency * N
+5. Inspect SQTT issue spacing
+6. Run independent-chain benchmark
+7. Save ISA + trace + raw measurements
+
+v_add_f32
+
+dependent-chain slope:       5.01 cycles/op
+SQTT producer spacing:       5 cycles
+independent issue interval:  1 cycle
+R² of chain-length fit:      0.9998
+
+Inferred dependency latency: 5 cycles
+Confidence: high
