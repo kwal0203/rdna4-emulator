@@ -46,10 +46,10 @@ For each instruction:
 
 v_add_f32
 
-dependent-chain slope:       5.01 cycles/op
-SQTT producer spacing:       5 cycles
-independent issue interval:  1 cycle
-R² of chain-length fit:      0.9998
+* dependent-chain slope:       5.01 cycles/op
+* SQTT producer spacing:       5 cycles
+* independent issue interval:  1 cycle
+* R² of chain-length fit:      0.9998
 
 Inferred dependency latency: 5 cycles
 Confidence: high
