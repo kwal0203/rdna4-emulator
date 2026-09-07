@@ -1,0 +1,1333 @@
+v_add_co_ci_u32:
+  encoding: vop2
+  opcode: 32
+  description: Add two unsigned 32-bit integer inputs and a bit from a carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
+  notes:
+    - >
+      In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u
+    - Supports saturation (unsigned 32-bit integer domain)
+  carry:
+    in: true
+    out: true
+
+  operands:
+    outputs:
+      - vdst
+      - sdst
+
+    inputs:
+      - src0
+      - vsrc1
+      - vcc
+
+  syntax: "vdst, sdst, src0:m, vsrc1:m, vcc:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src1
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+    - name: sdst_to_vcc
+      producer: sdst
+      consumer: vcc
+
+v_add_f16:
+  encoding: vop2
+  opcode: 50
+  description: Add two floating point inputs and store the result into a vector register
+  notes:
+    - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation
+
+  carry:
+    in: false
+    out: false
+
+  operands:
+    outputs:
+      - vdst
+
+    inputs:
+      - src0
+      - vsrc1
+
+  syntax: "vdst, src0:m, vsrc1:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src0
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+
+v_add_f32:
+  encoding: vop2
+  opcode: 3
+  description: Add two floating point inputs and store the result into a vector register
+  notes:
+    - 0.5ULP precision, denormals are supported
+
+  carry:
+    in: false
+    out: false
+
+  operands:
+    outputs:
+      - vdst
+
+    inputs:
+      - src0
+      - vsrc1
+
+  syntax: "vdst, src0:m, vsrc1:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src0
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+
+v_add_f64:
+  encoding: vop2
+  opcode: 2
+  description: Add two floating point inputs and store the result into a vector register
+  notes:
+    - 0.5ULP precision, denormals are supported
+
+  carry:
+    in: false
+    out: false
+
+  operands:
+    outputs:
+      - vdst
+
+    inputs:
+      - src0
+      - vsrc1
+
+  syntax: "vdst, src0:m, vsrc1:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src0
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+
+v_add_nc_u32:
+  encoding: vop2
+  opcode: 37
+  description: >
+    Add two unsigned 32-bit integer inputs and store the result into a vector register.
+    No carry-in or carry-out support
+
+  notes:
+    - Supports saturation (unsigned 32-bit integer domain)
+
+  carry:
+    in: false
+    out: false
+
+  operands:
+    outputs:
+      - vdst
+
+    inputs:
+      - src0
+      - vsrc1
+
+  syntax: "vdst, src0:m, vsrc1:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src0
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+
+v_and_b32:
+  encoding: vop2
+  opcode: 27
+  description: >
+    Calculate bitwise AND on two vector inputs and store the result into a vector register
+  notes:
+    - Input and output modifiers not supported
+
+  carry:
+    in: false
+    out: false
+
+  operands:
+    outputs:
+      - vdst
+
+    inputs:
+      - src0
+      - vsrc1
+
+  syntax: "vdst, src0:m, vsrc1:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src0
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+
+v_ashrrev_i32:
+  encoding: vop2
+  opcode: 26
+  description: >
+    Given a shift count in the first vector input, calculate the arithmetic shift right
+    (preserving sign bit) of the second vector input and store the result into a vector
+    register
+  notes:
+    - DPP operates on the shift count, not the data being shifted
+
+  carry:
+    in: false
+    out: false
+
+  operands:
+    outputs:
+      - vdst
+
+    inputs:
+      - src0
+      - vsrc1
+
+  syntax: "vdst, src0:m, vsrc1:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src0
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+
+v_cndmask_b32:
+  encoding: vop2
+  opcode: 1
+  description: >
+    Copy data from one of two inputs based on the per-lane condition code and store the result
+    into a vector register
+  notes:
+    - V_CNDMASK_B32 is the "VOP2" form that uses VCC as the select. VCC counts as one SGPR read.
+    - In VOP3 the VCC source may be a scalar GPR specified in S2
+    - >
+      Floating-point modifiers are valid for this instruction if S0 and S1 are 32-bit floating
+      point values. This instruction is suitable for negating or taking the absolute value of
+      a floating-point value
+
+  carry:
+    in: false
+    out: false
+
+  operands:
+    outputs:
+      - vdst
+
+    inputs:
+      - src0
+      - vsrc1
+      - vcc
+
+  syntax: "vdst, src0:m, vsrc1:m, vcc:m"
+
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src0
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1
+
+v_cvt_pk_rtz_f16_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_fmaak_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_fmaak_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_fmac_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_fmac_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_fmamk_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_fmamk_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_ldexp_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_lshlrev_b32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_lshlrev_b64:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_lshrrev_b32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_max_i32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_max_num_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_max_num_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_max_num_f64:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_max_u32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_min_i32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_min_num_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_min_num_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_min_num_f64:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_min_u32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_dx9_zero_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_f64:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_hi_i32_i24:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_hi_i32_u24:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_i32_i24:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_mul_u32_u24:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_or_b32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_pk_fmac_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_subrev_co_ci_u32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_subrev_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_subrev_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_subrev_nc_u32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_sub_co_ci_u32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_sub_f16:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_sub_f32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_sub_nc_u32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_xnor_b32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_xor_b32:
+  encoding: vop2
+  opcode:
+  description:
+  notes:
+    -
+
+  carry:
+    in:
+    out:
+
+  operands:
+    outputs:
+      -
+
+    inputs:
+      -
+      -
+
+  syntax:
+
+  latency_paths:
+    - name:
+      producer:
+      consumer:
+
+v_add_f32:
+  encoding: vop2
+  outputs:
+    - vdst
+  inputs:
+    - src0
+    - vsrc1
+  latency_paths:
+    - name: vdst_to_src0
+      producer: vdst
+      consumer: src1
+    - name: vdst_to_vsrc1
+      producer: vdst
+      consumer: vsrc1

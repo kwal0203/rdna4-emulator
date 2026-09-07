@@ -42,6 +42,7 @@ int main()
 '''
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--encoding", required=True)
 parser.add_argument("--benchmark-type", required=True)
 parser.add_argument("--experiment", required=True)
 parser.add_argument("--instruction", required=True)
