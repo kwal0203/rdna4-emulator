@@ -241,6 +241,11 @@ v_cndmask_b32:
       - vsrc1
       - vcc
 
+  special_state:
+    reads:
+      - name: vcc
+        role: selection_mask
+
   syntax: "vdst, src0:m, vsrc1:m, vcc:m"
 
   latency_paths:
