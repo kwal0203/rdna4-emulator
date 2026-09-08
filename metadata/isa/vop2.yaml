@@ -30,7 +30,7 @@ v_add_co_ci_u32:
   latency_paths:
     - name: vdst_to_src0
       producer: vdst
-      consumer: src1
+      consumer: src0
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
@@ -397,8 +397,7 @@ v_fmac_f32:
     Multiply two floating point inputs and accumulate the result into the destination register using fused
     multiply add
   
-  notes:
-    -
+  notes: []
 
   operands:
     outputs:
@@ -407,6 +406,7 @@ v_fmac_f32:
     inputs:
       - src0
       - vsrc1
+      - vdst
 
   special_state:
     reads: []
@@ -421,6 +421,9 @@ v_fmac_f32:
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+    - name: vdst_to_accumulator
+      producer: vdst
+      consumer: vdst
 
 v_fmamk_f16:
   encoding: vop2
@@ -622,8 +625,7 @@ v_max_i32:
   description: >
     Select the maximum of two signed 32-bit integer inputs and store the selected value into a vector register
   
-  notes:
-    -
+  notes: []
 
   operands:
     outputs:
@@ -764,8 +766,7 @@ v_max_u32:
   description: >
     Select the maximum of two unsigned 32-bit integer inputs and store the selected value into a vector register
   
-  notes:
-    -
+  notes: []
 
   operands:
     outputs:
@@ -795,8 +796,7 @@ v_min_i32:
   description: >
     Select the minimum of two signed 32-bit integer inputs and store the selected value into a vector register
 
-  notes:
-    -
+  notes: []
 
   operands:
     outputs:
@@ -939,8 +939,7 @@ v_min_u32:
   description: >
     Select the minimum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-  notes:
-    -
+  notes: []
 
   operands:
     outputs:
@@ -971,8 +970,7 @@ v_mul_dx9_zero_f32:
     Multiply two floating point inputs and store the result into a vector register. Follows DX9 rules where 0.0
     times anything produces 0.0 (this differs from other APIs when the other input is infinity or NaN).
 
-  notes:
-    -
+  notes: []
 
   operands:
     outputs:
@@ -1268,6 +1266,7 @@ v_pk_fmac_f16:
     inputs:
       - src0
       - vsrc1
+      - vdst
 
   special_state:
     reads: []
@@ -1282,6 +1281,9 @@ v_pk_fmac_f16:
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+    - name: vdst_to_accumulator
+      producer: vdst
+      consumer: vdst
 
 v_subrev_co_ci_u32:
   encoding: vop2
@@ -1455,7 +1457,7 @@ v_sub_co_ci_u32:
   latency_paths:
     - name: vdst_to_src0
       producer: vdst
-      consumer: src1
+      consumer: src0
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
@@ -1591,9 +1593,9 @@ v_xnor_b32:
 v_xor_b32:
   encoding: vop2
   opcode: 29
-  description:
-  notes:
-    - Calculate bitwise XOR on two vector inputs and store the result into a vector register.
+  description: Calculate bitwise XOR on two vector inputs and store the result into a vector register.
+
+  notes: []
 
   operands:
     outputs:
