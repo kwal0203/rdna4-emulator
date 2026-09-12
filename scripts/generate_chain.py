@@ -1,65 +1,30 @@
 from .validator import VOP2Instructions
+from .templates.vector_binary import VECTOR_BINARY_TEMPLATE
+from .templates.carry import CARRY_TEMPLATE
 from pathlib import Path
 
 import argparse
 import yaml
 import sys
 
-
-TEMPLATE = r'''
-#include <hip/hip_runtime.h>
-#include <iostream>
-
-#define HIP_CHECK(call)                                 \
-    do {{                                                \
-        hipError_t err = call;                          \
-        if (err != hipSuccess) {{                        \
-            std::cerr << #call << " failed " << '\n';   \
-            return 1;                                   \
-        }}                                               \
-    }} while (0)                                         \
-
-__global__ void v_add_f32_bench(uint32_t *out)
-{{
-    float x = 1.0f;
-    float y = 2.0f;
-
-    uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
-
-    asm volatile(
-{instructions}
-        : "+v"(x)
-        : "v"(y));
-
-    uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;
-
-    if (threadIdx.x == 0)
-        out[0] = end - start;
-}}
-
-
-int main()
-{{
-    uint32_t *d_out = nullptr;
-    uint32_t result = 0;
-
-    HIP_CHECK(hipMalloc(&d_out, sizeof(float)));
-    hipLaunchKernelGGL(
-        v_add_f32_bench,
-        dim3(1),
-        dim3(32),
-        0,
-        0,
-        d_out);
-
-
-    HIP_CHECK(hipDeviceSynchronize());
-    HIP_CHECK(hipMemcpy(&result, d_out, sizeof(float), hipMemcpyDeviceToHost));
-    HIP_CHECK(hipFree(d_out));
-
-    std::cout << "Cycles = " << result << '\n';
-}}
-'''
+EXPERIMENTS = {
+    "vdst_to_src0": {
+        "template": VECTOR_BINARY_TEMPLATE,
+        "instruction": "{instruction} %0, %0, %1",
+    },
+    "vdst_to_vsrc1": {
+        "template": VECTOR_BINARY_TEMPLATE,
+        "instruction": "{instruction} %0, %1, %0",
+    },
+    "sdst_to_vcc": {
+        "template": CARRY_TEMPLATE,
+        "instruction": "{instruction} %0, %1, %2, %3, %1",
+    },
+    "vdst_to_vdst": {
+        "template": VECTOR_BINARY_TEMPLATE,
+        "instruction": "{instruction} %0, %0, %1",
+    },
+}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--encoding", required=True, help="VOP2, VOP3 etc")
@@ -72,20 +37,26 @@ with open("/home/kane/Projects/rdna4-emulator/metadata/isa/vop2.yaml", "r") as f
 instructions = VOP2Instructions.model_validate(raw)
 for instruction_name, instruction in instructions.root.items():
     for experiment in instruction.latency_paths:
-        if experiment == "vdst_to_src0":
-            instruction_text = f"{args.instruction} %0, %0, %1"
-        elif experiment == "vdst_to_vsrc1":
-            instruction_text = f"{args.instruction} %0, %1, %0"
-        else:
+        print(f"Instruction: {instruction_name}, experiment: {experiment}")
+        try:
+            config = EXPERIMENTS[experiment.name]
+        except KeyError:
             print("Unrecognized experiment")
+            print(f"Instruction: {instruction_name}, experiment: {experiment.name}")
             sys.exit(1)
 
+        template = config["template"]
+        instruction_text = config["instruction"].format(instruction=instruction_name)
         for count in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
             instructions_text = "\n".join(
                 f'        "{instruction_text}\\n\\t"'
-                for _ in range(args.count)
+                for _ in range(count)
             )
-            source = TEMPLATE.format(instructions=instructions)
+
+            source = template.format(
+                instruction_name=instruction_name,
+                instructions=instructions_text)
+
             out = (
                 Path("generated")
                 / args.encoding
