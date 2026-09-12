@@ -264,7 +264,7 @@ v_cvt_pk_rtz_f16_f32:
   description: >
     Convert two single-precision float inputs to a packed half-precision float value using round toward
     zero semantics (ignore the current rounding mode), and store the result into a vector register
-  
+
   notes:
     - >
       This opcode is intended for use with 16-bit compressed exports. See V_CVT_F16_F32 for a version that
@@ -298,7 +298,7 @@ v_fmaak_f16:
   description: >
     Multiply two half-precision float inputs and add a literal constant using fused multiply add, and store the
     result into a vector register
-  
+
   notes:
     - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
 
@@ -331,7 +331,7 @@ v_fmaak_f32:
   description: >
     Multiply two single-precision float inputs and add a literal constant using fused multiply add, and store
     the result into a vector register
-  
+
   notes:
     - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
 
@@ -364,7 +364,7 @@ v_fmac_f16:
   description: >
     Multiply two floating point inputs and accumulate the result into the destination register using fused
     multiply add
-  
+
   notes:
     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation
 
@@ -396,7 +396,7 @@ v_fmac_f32:
   description: >
     Multiply two floating point inputs and accumulate the result into the destination register using fused
     multiply add
-  
+
   notes: []
 
   operands:
@@ -421,7 +421,7 @@ v_fmac_f32:
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
-    - name: vdst_to_accumulator
+    - name: vdst_to_vdst
       producer: vdst
       consumer: vdst
 
@@ -624,7 +624,7 @@ v_max_i32:
   opcode: 18
   description: >
     Select the maximum of two signed 32-bit integer inputs and store the selected value into a vector register
-  
+
   notes: []
 
   operands:
@@ -692,7 +692,7 @@ v_max_num_f32:
   description: >
     Select the IEEE maximumNumber() of two single-precision float inputs and store the result into a vector register.
     A numeric argument is favoured over NaN when determining which argument to return.
-  
+
   notes:
     - IEEE compliant. Supports denormals, round mode, exception flags, saturation
     - >
@@ -729,7 +729,7 @@ v_max_num_f64:
   description: >
     Select the IEEE maximumNumber() of two single-precision float inputs and store the result into a vector register.
     A numeric argument is favoured over NaN when determining which argument to return.
-  
+
   notes:
     - IEEE compliant. Supports denormals, round mode, exception flags, saturation
     - >
@@ -765,7 +765,7 @@ v_max_u32:
   opcode: 20
   description: >
     Select the maximum of two unsigned 32-bit integer inputs and store the selected value into a vector register
-  
+
   notes: []
 
   operands:
@@ -826,7 +826,7 @@ v_min_num_f16:
   description: >
     Select the IEEE minimumNumber() of two half-precision float inputs and store the result into a vector register.
     A numeric argument is favoured over NaN when determining which argument to return.
-  
+
   notes:
     - IEEE compliant. Supports denormals, round mode, exception flags, saturation.
     - >
@@ -864,7 +864,7 @@ v_min_num_f32:
     Select the IEEE minimumNumber() of two single-precision float inputs and store the result into a vector
     register.
     A numeric argument is favoured over NaN when determining which argument to return.
-  
+
   notes:
     - IEEE compliant. Supports denormals, round mode, exception flags, saturation.
     - >
@@ -902,7 +902,7 @@ v_min_num_f64:
     Select the IEEE minimumNumber() of two single-precision float inputs and store the result into a vector
     register.
     A numeric argument is favoured over NaN when determining which argument to return.
-  
+
   notes:
     - IEEE compliant. Supports denormals, round mode, exception flags, saturation.
     - >
@@ -999,7 +999,7 @@ v_mul_f16:
   opcode: 53
   description: >
     Multiply two floating point inputs and store the result into a vector register.
-  
+
   notes:
     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation.
 
@@ -1030,7 +1030,7 @@ v_mul_f32:
   opcode: 8
   description: >
     Multiply two floating point inputs and store the result into a vector register.
-  
+
   notes:
     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation.
 
@@ -1061,7 +1061,7 @@ v_mul_f64:
   opcode: 6
   description: >
     Multiply two floating point inputs and store the result into a vector register.
-  
+
   notes:
     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation.
 
@@ -1093,7 +1093,7 @@ v_mul_hi_i32_i24:
   description: >
     Multiply two signed 24-bit integer inputs and store the high 32 bits of the result as a signed 32-bit integer into a
     vector register.
-  
+
   notes:
     - See also V_MUL_I32_I24.
 
@@ -1125,7 +1125,7 @@ v_mul_hi_u32_u24:
   description: >
     Multiply two unsigned 24-bit integer inputs and store the high 32 bits of the result as an unsigned 32-bit integer
     into a vector register.
-  
+
   notes:
     - See also V_MUL_U32_U24.
 
@@ -1190,7 +1190,7 @@ v_mul_u32_u24:
   description: >
     Multiply two unsigned 24-bit integer inputs and store the result as an unsigned 32-bit integer into a vector
     register.
-  
+
   notes:
     - >
       This opcode is expected to be as efficient as basic single-precision opcodes since it utilizes the single-precision
@@ -1223,7 +1223,7 @@ v_or_b32:
   opcode: 28
   description: >
     Calculate bitwise OR on two vector inputs and store the result into a vector register.
-  
+
   notes:
     - Input and output modifiers not supported.
 
@@ -1255,7 +1255,7 @@ v_pk_fmac_f16:
   description: >
     Multiply two packed half-precision float inputs component-wise and accumulate the result into the destination
     register using fused multiply add.
-  
+
   notes:
     - VOP2 version of V_PK_FMA_F16 with third source VGPR address is the destination.
 
@@ -1281,7 +1281,7 @@ v_pk_fmac_f16:
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
-    - name: vdst_to_accumulator
+    - name: vdst_to_vdst
       producer: vdst
       consumer: vdst
 
@@ -1291,7 +1291,7 @@ v_subrev_co_ci_u32:
   description: >
     Subtract the first unsigned 32-bit integer input from the second input, subtract a bit from the carry-in mask,
     store the result into a vector register and store the carry-out mask into a scalar register.
-  
+
   notes:
     - >
       In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at
@@ -1334,7 +1334,7 @@ v_subrev_f16:
   opcode: 52
   description: >
     Subtract the first floating point input from the second input and store the result into a vector register.
-  
+
   notes:
     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation.
 
@@ -1397,7 +1397,7 @@ v_subrev_nc_u32:
   description: >
     Subtract the first unsigned 32-bit integer input from the second input and store the result into a vector register.
     No carry-in or carry-out support.
-  
+
   notes:
     - Supports saturation (unsigned 32-bit integer domain).
 
@@ -1429,7 +1429,7 @@ v_sub_co_ci_u32:
   description: >
     Subtract the second unsigned 32-bit integer input from the first input, subtract a bit from the carry-in mask,
     store the result into a vector register and store the carry-out mask into a scalar register.
-  
+
   notes:
     - In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u.
     - Supports saturation (unsigned 32-bit integer domain).
