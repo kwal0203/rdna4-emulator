@@ -23,6 +23,8 @@ class LatencyPath(BaseModel):
 class VOP2Instruction(BaseModel):
     encoding: str
     opcode: int = Field(ge=0)
+    input_datatype: str
+    output_datatype: str
     description: str
     notes: list[str] = Field(default_factory=list)
     operands: Operands

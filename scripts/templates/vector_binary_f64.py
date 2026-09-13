@@ -1,4 +1,4 @@
-VECTOR_BINARY_TEMPLATE = r'''
+VECTOR_BINARY_TEMPLATE_F64 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
 
@@ -13,8 +13,8 @@ VECTOR_BINARY_TEMPLATE = r'''
 
 __global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    float x = 1.0f;
-    float y = 2.0f;
+    double x = 1.0f;
+    double y = 2.0f;
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 

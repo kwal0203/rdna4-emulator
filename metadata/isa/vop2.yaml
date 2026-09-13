@@ -1,6 +1,8 @@
 v_add_co_ci_u32:
   encoding: vop2
   opcode: 32
+  input_datatype: u32
+  output_datatype: u32
   description: Add two unsigned 32-bit integer inputs and a bit from a carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
   notes:
     - >
@@ -41,6 +43,8 @@ v_add_co_ci_u32:
 v_add_f16:
   encoding: vop2
   opcode: 50
+  input_datatype: f16
+  output_datatype: f16
   description: Add two floating point inputs and store the result into a vector register
   notes:
     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation
@@ -70,6 +74,8 @@ v_add_f16:
 v_add_f32:
   encoding: vop2
   opcode: 3
+  input_datatype: f32
+  output_datatype: f32
   description: Add two floating point inputs and store the result into a vector register
   notes:
     - 0.5ULP precision, denormals are supported
@@ -99,6 +105,8 @@ v_add_f32:
 v_add_f64:
   encoding: vop2
   opcode: 2
+  input_datatype: f64
+  output_datatype: f64
   description: Add two floating point inputs and store the result into a vector register
   notes:
     - 0.5ULP precision, denormals are supported
@@ -128,6 +136,8 @@ v_add_f64:
 v_add_nc_u32:
   encoding: vop2
   opcode: 37
+  input_datatype: u32
+  output_datatype: u32
   description: >
     Add two unsigned 32-bit integer inputs and store the result into a vector register.
     No carry-in or carry-out support
@@ -160,6 +170,8 @@ v_add_nc_u32:
 v_and_b32:
   encoding: vop2
   opcode: 27
+  input_datatype: b32
+  output_datatype: b32
   description: >
     Calculate bitwise AND on two vector inputs and store the result into a vector register
   notes:
@@ -190,6 +202,8 @@ v_and_b32:
 v_ashrrev_i32:
   encoding: vop2
   opcode: 26
+  input_datatype: i32
+  output_datatype: i32
   description: >
     Given a shift count in the first vector input, calculate the arithmetic shift right
     (preserving sign bit) of the second vector input and store the result into a vector
@@ -222,6 +236,8 @@ v_ashrrev_i32:
 v_cndmask_b32:
   encoding: vop2
   opcode: 1
+  input_datatype: b32
+  output_datatype: b32
   description: >
     Copy data from one of two inputs based on the per-lane condition code and store the result
     into a vector register
@@ -261,6 +277,8 @@ v_cndmask_b32:
 v_cvt_pk_rtz_f16_f32:
   encoding: vop2
   opcode: 47
+  input_datatype: f32
+  output_datatype: f16
   description: >
     Convert two single-precision float inputs to a packed half-precision float value using round toward
     zero semantics (ignore the current rounding mode), and store the result into a vector register
@@ -295,6 +313,8 @@ v_cvt_pk_rtz_f16_f32:
 v_fmaak_f16:
   encoding: vop2
   opcode: 56
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Multiply two half-precision float inputs and add a literal constant using fused multiply add, and store the
     result into a vector register
@@ -328,6 +348,8 @@ v_fmaak_f16:
 v_fmaak_f32:
   encoding: vop2
   opcode: 45
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Multiply two single-precision float inputs and add a literal constant using fused multiply add, and store
     the result into a vector register
@@ -361,6 +383,8 @@ v_fmaak_f32:
 v_fmac_f16:
   encoding: vop2
   opcode: 54
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Multiply two floating point inputs and accumulate the result into the destination register using fused
     multiply add
@@ -393,6 +417,8 @@ v_fmac_f16:
 v_fmac_f32:
   encoding: vop2
   opcode: 43
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Multiply two floating point inputs and accumulate the result into the destination register using fused
     multiply add
@@ -428,6 +454,8 @@ v_fmac_f32:
 v_fmamk_f16:
   encoding: vop2
   opcode: 55
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Multiply a half-precision float input with a literal constant and add a second half-precision float
     input using fused multiply add, and store the result into a vector register
@@ -461,6 +489,8 @@ v_fmamk_f16:
 v_fmamk_f32:
   encoding: vop2
   opcode: 44
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Multiply a single-precision float input with a literal constant and add a second single-precision float input
     using fused multiply add, and store the result into a vector register
@@ -494,6 +524,8 @@ v_fmamk_f32:
 v_ldexp_f16:
   encoding: vop2
   opcode: 59
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Multiply the first input, a floating point value, by an integral power of 2 specified in the second input
     a signed integer value, and store the floating point result into a vector register
@@ -526,6 +558,8 @@ v_ldexp_f16:
 v_lshlrev_b32:
   encoding: vop2
   opcode: 24
+  input_datatype: b32
+  output_datatype: b32
   description: >
     Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store
     the result into a vector register
@@ -558,6 +592,8 @@ v_lshlrev_b32:
 v_lshlrev_b64:
   encoding: vop2
   opcode: 31
+  input_datatype: b64
+  output_datatype: b64
   description: >
     Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store
     the result into a vector register
@@ -590,6 +626,8 @@ v_lshlrev_b64:
 v_lshrrev_b32:
   encoding: vop2
   opcode: 25
+  input_datatype: b32
+  output_datatype: b32
   description: >
     Given a shift count in the first vector input, calculate the logical shift right of the second vector input and
     store the result into a vector register
@@ -622,6 +660,8 @@ v_lshrrev_b32:
 v_max_i32:
   encoding: vop2
   opcode: 18
+  input_datatype: i32
+  output_datatype: i32
   description: >
     Select the maximum of two signed 32-bit integer inputs and store the selected value into a vector register
 
@@ -652,6 +692,8 @@ v_max_i32:
 v_max_num_f16:
   encoding: vop2
   opcode: 49
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Select the IEEE maximumNumber() of two half-precision float inputs and store the result into a vector register.
     A numeric argument is favoured over NaN when determining which argument to return
@@ -689,6 +731,8 @@ v_max_num_f16:
 v_max_num_f32:
   encoding: vop2
   opcode: 22
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Select the IEEE maximumNumber() of two single-precision float inputs and store the result into a vector register.
     A numeric argument is favoured over NaN when determining which argument to return.
@@ -726,6 +770,8 @@ v_max_num_f32:
 v_max_num_f64:
   encoding: vop2
   opcode: 14
+  input_datatype: f64
+  output_datatype: f64
   description: >
     Select the IEEE maximumNumber() of two single-precision float inputs and store the result into a vector register.
     A numeric argument is favoured over NaN when determining which argument to return.
@@ -763,6 +809,8 @@ v_max_num_f64:
 v_max_u32:
   encoding: vop2
   opcode: 20
+  input_datatype: u32
+  output_datatype: u32
   description: >
     Select the maximum of two unsigned 32-bit integer inputs and store the selected value into a vector register
 
@@ -793,6 +841,8 @@ v_max_u32:
 v_min_i32:
   encoding: vop2
   opcode: 17
+  input_datatype: i32
+  output_datatype: i32
   description: >
     Select the minimum of two signed 32-bit integer inputs and store the selected value into a vector register
 
@@ -823,6 +873,8 @@ v_min_i32:
 v_min_num_f16:
   encoding: vop2
   opcode: 48
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Select the IEEE minimumNumber() of two half-precision float inputs and store the result into a vector register.
     A numeric argument is favoured over NaN when determining which argument to return.
@@ -860,6 +912,8 @@ v_min_num_f16:
 v_min_num_f32:
   encoding: vop2
   opcode: 21
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Select the IEEE minimumNumber() of two single-precision float inputs and store the result into a vector
     register.
@@ -898,6 +952,8 @@ v_min_num_f32:
 v_min_num_f64:
   encoding: vop2
   opcode: 13
+  input_datatype: f64
+  output_datatype: f64
   description: >
     Select the IEEE minimumNumber() of two single-precision float inputs and store the result into a vector
     register.
@@ -936,6 +992,8 @@ v_min_num_f64:
 v_min_u32:
   encoding: vop2
   opcode: 19
+  input_datatype: u32
+  output_datatype: u32
   description: >
     Select the minimum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
 
@@ -966,6 +1024,8 @@ v_min_u32:
 v_mul_dx9_zero_f32:
   encoding: vop2
   opcode: 7
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Multiply two floating point inputs and store the result into a vector register. Follows DX9 rules where 0.0
     times anything produces 0.0 (this differs from other APIs when the other input is infinity or NaN).
@@ -997,6 +1057,8 @@ v_mul_dx9_zero_f32:
 v_mul_f16:
   encoding: vop2
   opcode: 53
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Multiply two floating point inputs and store the result into a vector register.
 
@@ -1028,6 +1090,8 @@ v_mul_f16:
 v_mul_f32:
   encoding: vop2
   opcode: 8
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Multiply two floating point inputs and store the result into a vector register.
 
@@ -1059,6 +1123,8 @@ v_mul_f32:
 v_mul_f64:
   encoding: vop2
   opcode: 6
+  input_datatype: f64
+  output_datatype: f64
   description: >
     Multiply two floating point inputs and store the result into a vector register.
 
@@ -1090,6 +1156,8 @@ v_mul_f64:
 v_mul_hi_i32_i24:
   encoding: vop2
   opcode: 10
+  input_datatype: i24
+  output_datatype: i32
   description: >
     Multiply two signed 24-bit integer inputs and store the high 32 bits of the result as a signed 32-bit integer into a
     vector register.
@@ -1122,6 +1190,8 @@ v_mul_hi_i32_i24:
 v_mul_hi_u32_u24:
   encoding: vop2
   opcode: 12
+  input_datatype: u24
+  output_datatype: u32
   description: >
     Multiply two unsigned 24-bit integer inputs and store the high 32 bits of the result as an unsigned 32-bit integer
     into a vector register.
@@ -1154,6 +1224,8 @@ v_mul_hi_u32_u24:
 v_mul_i32_i24:
   encoding: vop2
   opcode: 9
+  input_datatype: i24
+  output_datatype: i32
   description: >
     Multiply two signed 24-bit integer inputs and store the result as a signed 32-bit integer into a vector register.
 
@@ -1187,6 +1259,8 @@ v_mul_i32_i24:
 v_mul_u32_u24:
   encoding: vop2
   opcode: 11
+  input_datatype: u24
+  output_datatype: u32
   description: >
     Multiply two unsigned 24-bit integer inputs and store the result as an unsigned 32-bit integer into a vector
     register.
@@ -1221,6 +1295,8 @@ v_mul_u32_u24:
 v_or_b32:
   encoding: vop2
   opcode: 28
+  input_datatype: b32
+  output_datatype: b32
   description: >
     Calculate bitwise OR on two vector inputs and store the result into a vector register.
 
@@ -1252,6 +1328,8 @@ v_or_b32:
 v_pk_fmac_f16:
   encoding: vop2
   opcode: 60
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Multiply two packed half-precision float inputs component-wise and accumulate the result into the destination
     register using fused multiply add.
@@ -1288,6 +1366,8 @@ v_pk_fmac_f16:
 v_subrev_co_ci_u32:
   encoding: vop2
   opcode: 34
+  input_datatype: u32
+  output_datatype: u32
   description: >
     Subtract the first unsigned 32-bit integer input from the second input, subtract a bit from the carry-in mask,
     store the result into a vector register and store the carry-out mask into a scalar register.
@@ -1332,6 +1412,8 @@ v_subrev_co_ci_u32:
 v_subrev_f16:
   encoding: vop2
   opcode: 52
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Subtract the first floating point input from the second input and store the result into a vector register.
 
@@ -1363,6 +1445,8 @@ v_subrev_f16:
 v_subrev_f32:
   encoding: vop2
   opcode: 5
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Subtract the first floating point input from the second input and store the result into a vector register.
 
@@ -1394,6 +1478,8 @@ v_subrev_f32:
 v_subrev_nc_u32:
   encoding: vop2
   opcode: 39
+  input_datatype: u32
+  output_datatype: u32
   description: >
     Subtract the first unsigned 32-bit integer input from the second input and store the result into a vector register.
     No carry-in or carry-out support.
@@ -1426,6 +1512,8 @@ v_subrev_nc_u32:
 v_sub_co_ci_u32:
   encoding: vop2
   opcode: 33
+  input_datatype: u32
+  output_datatype: u32
   description: >
     Subtract the second unsigned 32-bit integer input from the first input, subtract a bit from the carry-in mask,
     store the result into a vector register and store the carry-out mask into a scalar register.
@@ -1468,6 +1556,8 @@ v_sub_co_ci_u32:
 v_sub_f16:
   encoding: vop2
   opcode: 51
+  input_datatype: f16
+  output_datatype: f16
   description: >
     Subtract the second floating point input from the first input and store the result into a vector register.
 
@@ -1499,6 +1589,8 @@ v_sub_f16:
 v_sub_f32:
   encoding: vop2
   opcode: 4
+  input_datatype: f32
+  output_datatype: f32
   description: >
     Subtract the second floating point input from the first input and store the result into a vector register.
 
@@ -1530,6 +1622,8 @@ v_sub_f32:
 v_sub_nc_u32:
   encoding: vop2
   opcode: 38
+  input_datatype: u32
+  output_datatype: u32
   description: >
     Subtract the second unsigned 32-bit integer input from the first input and store the result into a vector register.
     No carry-in or carry-out support.
@@ -1562,6 +1656,8 @@ v_sub_nc_u32:
 v_xnor_b32:
   encoding: vop2
   opcode: 30
+  input_datatype: b32
+  output_datatype: b32
   description: >
     Calculate bitwise XNOR on two vector inputs and store the result into a vector register.
 
@@ -1593,6 +1689,8 @@ v_xnor_b32:
 v_xor_b32:
   encoding: vop2
   opcode: 29
+  input_datatype: b32
+  output_datatype: b32
   description: Calculate bitwise XOR on two vector inputs and store the result into a vector register.
 
   notes: []

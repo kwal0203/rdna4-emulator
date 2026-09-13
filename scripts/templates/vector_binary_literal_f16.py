@@ -1,6 +1,7 @@
-CARRY_TEMPLATE = r'''
+VECTOR_BINARY_LITERAL_TEMPLATE_F16 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
+#include <cstdint>
 
 #define HIP_CHECK(call)                                 \
     do {{                                                \
@@ -11,19 +12,17 @@ CARRY_TEMPLATE = r'''
         }}                                               \
     }} while (0)                                         \
 
-__global__ void {{instruction_name}}_bench(uint32_t *out)
+__global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    uint32_t result;
-    uint32_t carry;
-    uint32_t x;
-    uint32_t y;
+    uint32_t x = 0x3c00; // f16 1.0
+    uint32_t y = 0x4000; // f16 2.0
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 
     asm volatile(
 {instructions}
-        : "+v"(result), "+s"(carry)
-        : "v"(x), "v"(y));
+        : "+v"(x)
+        : "v"(y));
 
     uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;
 
@@ -39,7 +38,7 @@ int main()
 
     HIP_CHECK(hipMalloc(&d_out, sizeof(uint32_t)));
     hipLaunchKernelGGL(
-        v_add_f32_bench,
+        {instruction_name}_bench,
         dim3(1),
         dim3(32),
         0,
