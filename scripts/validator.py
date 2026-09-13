@@ -19,6 +19,7 @@ class LatencyPath(BaseModel):
     name: str
     producer: str
     consumer: str
+    instruction_format: str
 
 class VOP2Instruction(BaseModel):
     encoding: str

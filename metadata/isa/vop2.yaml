@@ -1,44 +1,47 @@
-v_add_co_ci_u32:
-  encoding: vop2
-  opcode: 32
-  input_datatype: u32
-  output_datatype: u32
-  description: Add two unsigned 32-bit integer inputs and a bit from a carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
-  notes:
-    - >
-      In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u
-    - Supports saturation (unsigned 32-bit integer domain)
+# v_add_co_ci_u32:
+#   encoding: vop2
+#   opcode: 32
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: Add two unsigned 32-bit integer inputs and a bit from a carry-in mask, store the result into a vector register and store the carry-out mask into a scalar register.
+#   notes:
+#     - >
+#       In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u
+#     - Supports saturation (unsigned 32-bit integer domain)
 
-  operands:
-    outputs:
-      - vdst
-      - sdst
+#   operands:
+#     outputs:
+#       - vdst
+#       - sdst
 
-    inputs:
-      - src0
-      - vsrc1
-      - vcc
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - vcc
 
-  special_state:
-    reads:
-      - name: vcc
-        role: carry_in
-    writes:
-      - name: sdst
-        role: carry_out
+#   special_state:
+#     reads:
+#       - name: vcc
+#         role: carry_in
+#     writes:
+#       - name: sdst
+#         role: carry_out
 
-  syntax: "vdst, sdst, src0:m, vsrc1:m, vcc:m"
+#   syntax: "vdst, sdst, src0:m, vsrc1:m, vcc:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
-    - name: sdst_to_vcc
-      producer: sdst
-      consumer: vcc
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#       instruction_format: "v_add_co_ci_u32 %0, %1, %0, %2, %3"
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#       instruction_format: "v_add_co_ci_u32 %0, %1, %2, %0, %3"
+#     - name: sdst_to_vcc
+#       producer: sdst
+#       consumer: vcc
+#       instruction_format: "v_add_co_ci_u32 %0, %1, %2, %3, %1"
 
 v_add_f16:
   encoding: vop2
@@ -67,9 +70,11 @@ v_add_f16:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_add_f16 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_add_f16 %0, %1, %0"
 
 v_add_f32:
   encoding: vop2
@@ -98,74 +103,80 @@ v_add_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_add_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_add_f32 %0, %1, %0"
 
-v_add_f64:
-  encoding: vop2
-  opcode: 2
-  input_datatype: f64
-  output_datatype: f64
-  description: Add two floating point inputs and store the result into a vector register
-  notes:
-    - 0.5ULP precision, denormals are supported
+# v_add_f64:
+#   encoding: vop2
+#   opcode: 2
+#   input_datatype: f64
+#   output_datatype: f64
+#   description: Add two floating point inputs and store the result into a vector register
+#   notes:
+#     - 0.5ULP precision, denormals are supported
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#       instruction_format: "v_add_f64 %0, %0, %1"
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#       instruction_format: "v_add_f64 %0, %1, %0"
 
-v_add_nc_u32:
-  encoding: vop2
-  opcode: 37
-  input_datatype: u32
-  output_datatype: u32
-  description: >
-    Add two unsigned 32-bit integer inputs and store the result into a vector register.
-    No carry-in or carry-out support
+# v_add_nc_u32:
+#   encoding: vop2
+#   opcode: 37
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: >
+#     Add two unsigned 32-bit integer inputs and store the result into a vector register.
+#     No carry-in or carry-out support
 
-  notes:
-    - Supports saturation (unsigned 32-bit integer domain)
+#   notes:
+#     - Supports saturation (unsigned 32-bit integer domain)
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#       instruction_format: "v_add_nc_u32 %0, %0, %1"
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#       instruction_format: "v_add_nc_u32 %0, %1, %0"
 
 v_and_b32:
   encoding: vop2
@@ -195,84 +206,86 @@ v_and_b32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_and_b32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_and_b32 %0, %1, %0"
 
-v_ashrrev_i32:
-  encoding: vop2
-  opcode: 26
-  input_datatype: i32
-  output_datatype: i32
-  description: >
-    Given a shift count in the first vector input, calculate the arithmetic shift right
-    (preserving sign bit) of the second vector input and store the result into a vector
-    register
-  notes:
-    - DPP operates on the shift count, not the data being shifted
+# v_ashrrev_i32:
+#   encoding: vop2
+#   opcode: 26
+#   input_datatype: i32
+#   output_datatype: i32
+#   description: >
+#     Given a shift count in the first vector input, calculate the arithmetic shift right
+#     (preserving sign bit) of the second vector input and store the result into a vector
+#     register
+#   notes:
+#     - DPP operates on the shift count, not the data being shifted
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-v_cndmask_b32:
-  encoding: vop2
-  opcode: 1
-  input_datatype: b32
-  output_datatype: b32
-  description: >
-    Copy data from one of two inputs based on the per-lane condition code and store the result
-    into a vector register
-  notes:
-    - V_CNDMASK_B32 is the "VOP2" form that uses VCC as the select. VCC counts as one SGPR read.
-    - In VOP3 the VCC source may be a scalar GPR specified in S2
-    - >
-      Floating-point modifiers are valid for this instruction if S0 and S1 are 32-bit floating
-      point values. This instruction is suitable for negating or taking the absolute value of
-      a floating-point value
+# v_cndmask_b32:
+#   encoding: vop2
+#   opcode: 1
+#   input_datatype: b32
+#   output_datatype: b32
+#   description: >
+#     Copy data from one of two inputs based on the per-lane condition code and store the result
+#     into a vector register
+#   notes:
+#     - V_CNDMASK_B32 is the "VOP2" form that uses VCC as the select. VCC counts as one SGPR read.
+#     - In VOP3 the VCC source may be a scalar GPR specified in S2
+#     - >
+#       Floating-point modifiers are valid for this instruction if S0 and S1 are 32-bit floating
+#       point values. This instruction is suitable for negating or taking the absolute value of
+#       a floating-point value
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
-      - vcc
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - vcc
 
-  special_state:
-    reads:
-      - name: vcc
-        role: selection_mask
-    writes: []
+#   special_state:
+#     reads:
+#       - name: vcc
+#         role: selection_mask
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m, vcc:m"
+#   syntax: "vdst, src0:m, vsrc1:m, vcc:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
 v_cvt_pk_rtz_f16_f32:
   encoding: vop2
@@ -306,220 +319,232 @@ v_cvt_pk_rtz_f16_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_cvt_pk_rtz_f16_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_cvt_pk_rtz_f16_f32 %0, %1, %0"
 
-v_fmaak_f16:
-  encoding: vop2
-  opcode: 56
-  input_datatype: f16
-  output_datatype: f16
-  description: >
-    Multiply two half-precision float inputs and add a literal constant using fused multiply add, and store the
-    result into a vector register
+# v_fmaak_f16:
+#   encoding: vop2
+#   opcode: 56
+#   input_datatype: f16
+#   output_datatype: f16
+#   description: >
+#     Multiply two half-precision float inputs and add a literal constant using fused multiply add, and store the
+#     result into a vector register
 
-  notes:
-    - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
+#   notes:
+#     - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
-      - literal
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - literal
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m, literal:m"
+#   syntax: "vdst, src0:m, vsrc1:m, literal:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-v_fmaak_f32:
-  encoding: vop2
-  opcode: 45
-  input_datatype: f32
-  output_datatype: f32
-  description: >
-    Multiply two single-precision float inputs and add a literal constant using fused multiply add, and store
-    the result into a vector register
+# v_fmaak_f32:
+#   encoding: vop2
+#   opcode: 45
+#   input_datatype: f32
+#   output_datatype: f32
+#   description: >
+#     Multiply two single-precision float inputs and add a literal constant using fused multiply add, and store
+#     the result into a vector register
 
-  notes:
-    - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
+#   notes:
+#     - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
-      - literal
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - literal
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m, literal:m"
+#   syntax: "vdst, src0:m, vsrc1:m, literal:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-v_fmac_f16:
-  encoding: vop2
-  opcode: 54
-  input_datatype: f16
-  output_datatype: f16
-  description: >
-    Multiply two floating point inputs and accumulate the result into the destination register using fused
-    multiply add
+# v_fmac_f16:
+#   encoding: vop2
+#   opcode: 54
+#   input_datatype: f16
+#   output_datatype: f16
+#   description: >
+#     Multiply two floating point inputs and accumulate the result into the destination register using fused
+#     multiply add
 
-  notes:
-    - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation
+#   notes:
+#     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#       instruction_format: "v_fmac_f16 %0, %0, %1"
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#       instruction_format: "v_fmac_f16 %0, %1, %0"
+#     - name: vdst_to_vdst
+#       producer: vdst
+#       consumer: vdst
+#       instruction_format: "v_fmac_f16"
 
-v_fmac_f32:
-  encoding: vop2
-  opcode: 43
-  input_datatype: f32
-  output_datatype: f32
-  description: >
-    Multiply two floating point inputs and accumulate the result into the destination register using fused
-    multiply add
 
-  notes: []
+# v_fmac_f32:
+#   encoding: vop2
+#   opcode: 43
+#   input_datatype: f32
+#   output_datatype: f32
+#   description: >
+#     Multiply two floating point inputs and accumulate the result into the destination register using fused
+#     multiply add
 
-  operands:
-    outputs:
-      - vdst
+#   notes: []
 
-    inputs:
-      - src0
-      - vsrc1
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - vdst
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
-    - name: vdst_to_vdst
-      producer: vdst
-      consumer: vdst
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_fmamk_f16:
-  encoding: vop2
-  opcode: 55
-  input_datatype: f16
-  output_datatype: f16
-  description: >
-    Multiply a half-precision float input with a literal constant and add a second half-precision float
-    input using fused multiply add, and store the result into a vector register
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#       instruction_format: "v_fmac_f32 %0, %0, %1"
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#       instruction_format: "v_fmac_f32 %0, %1, %0"
+#     - name: vdst_to_vdst
+#       producer: vdst
+#       consumer: vdst
+#       instruction_format: "v_fmac_f32"
 
-  notes:
-    - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
+# v_fmamk_f16:
+#   encoding: vop2
+#   opcode: 55
+#   input_datatype: f16
+#   output_datatype: f16
+#   description: >
+#     Multiply a half-precision float input with a literal constant and add a second half-precision float
+#     input using fused multiply add, and store the result into a vector register
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
 
-    inputs:
-      - src0
-      - vsrc1
-      - literal
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - literal
 
-  syntax: "vdst, src0:m, literal:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, literal:m, vsrc1:m"
 
-v_fmamk_f32:
-  encoding: vop2
-  opcode: 44
-  input_datatype: f32
-  output_datatype: f32
-  description: >
-    Multiply a single-precision float input with a literal constant and add a second single-precision float input
-    using fused multiply add, and store the result into a vector register
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
+# v_fmamk_f32:
+#   encoding: vop2
+#   opcode: 44
+#   input_datatype: f32
+#   output_datatype: f32
+#   description: >
+#     Multiply a single-precision float input with a literal constant and add a second single-precision float input
+#     using fused multiply add, and store the result into a vector register
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - This opcode cannot use the VOP3 encoding and cannot use input/output modifiers
 
-    inputs:
-      - src0
-      - vsrc1
-      - literal
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - literal
 
-  syntax: "vdst, src0:m, literal:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, literal:m, vsrc1:m"
+
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
 v_ldexp_f16:
   encoding: vop2
@@ -551,9 +576,11 @@ v_ldexp_f16:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_ldexp_f16 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_ldexp_f16 %0, %1, %0"
 
 v_lshlrev_b32:
   encoding: vop2
@@ -561,8 +588,7 @@ v_lshlrev_b32:
   input_datatype: b32
   output_datatype: b32
   description: >
-    Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store
-    the result into a vector register
+    Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store the result into a vector register
 
   notes:
     - DPP operates on the shift count, not the data being shifted
@@ -585,109 +611,113 @@ v_lshlrev_b32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_lshlrev_b32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_lshlrev_b32 %0, %1, %0"
 
-v_lshlrev_b64:
-  encoding: vop2
-  opcode: 31
-  input_datatype: b64
-  output_datatype: b64
-  description: >
-    Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store
-    the result into a vector register
 
-  notes:
-    - DPP operates on the shift count, not the data being shifted. Only one scalar broadcast constant is allowed
 
-  operands:
-    outputs:
-      - vdst
+# v_lshlrev_b64:
+#   encoding: vop2
+#   opcode: 31
+#   input_datatype: b64
+#   output_datatype: b64
+#   description: >
+#     Given a shift count in the first vector input, calculate the logical shift left of the second vector input and store
+#     the result into a vector register
 
-    inputs:
-      - src0
-      - vsrc1
+#   notes:
+#     - DPP operates on the shift count, not the data being shifted. Only one scalar broadcast constant is allowed
 
-  special_state:
-    reads: []
-    writes: []
+#   operands:
+#     outputs:
+#       - vdst
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   special_state:
+#     reads: []
+#     writes: []
 
-v_lshrrev_b32:
-  encoding: vop2
-  opcode: 25
-  input_datatype: b32
-  output_datatype: b32
-  description: >
-    Given a shift count in the first vector input, calculate the logical shift right of the second vector input and
-    store the result into a vector register
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  notes:
-    - DPP operates on the shift count, not the data being shifted
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  operands:
-    outputs:
-      - vdst
+# v_lshrrev_b32:
+#   encoding: vop2
+#   opcode: 25
+#   input_datatype: b32
+#   output_datatype: b32
+#   description: >
+#     Given a shift count in the first vector input, calculate the logical shift right of the second vector input and
+#     store the result into a vector register
 
-    inputs:
-      - src0
-      - vsrc1
+#   notes:
+#     - DPP operates on the shift count, not the data being shifted
 
-  special_state:
-    reads: []
-    writes: []
+#   operands:
+#     outputs:
+#       - vdst
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   special_state:
+#     reads: []
+#     writes: []
 
-v_max_i32:
-  encoding: vop2
-  opcode: 18
-  input_datatype: i32
-  output_datatype: i32
-  description: >
-    Select the maximum of two signed 32-bit integer inputs and store the selected value into a vector register
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  notes: []
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  operands:
-    outputs:
-      - vdst
+# v_max_i32:
+#   encoding: vop2
+#   opcode: 18
+#   input_datatype: i32
+#   output_datatype: i32
+#   description: >
+#     Select the maximum of two signed 32-bit integer inputs and store the selected value into a vector register
 
-    inputs:
-      - src0
-      - vsrc1
+#   notes: []
 
-  special_state:
-    reads: []
-    writes: []
+#   operands:
+#     outputs:
+#       - vdst
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   special_state:
+#     reads: []
+#     writes: []
+
+#   syntax: "vdst, src0:m, vsrc1:m"
+
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
 v_max_num_f16:
   encoding: vop2
@@ -724,9 +754,11 @@ v_max_num_f16:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_max_num_f16 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_max_num_f16 %0, %1, %0"
 
 v_max_num_f32:
   encoding: vop2
@@ -763,112 +795,115 @@ v_max_num_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_max_num_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_max_num_f32 %0, %1, %0"
 
-v_max_num_f64:
-  encoding: vop2
-  opcode: 14
-  input_datatype: f64
-  output_datatype: f64
-  description: >
-    Select the IEEE maximumNumber() of two single-precision float inputs and store the result into a vector register.
-    A numeric argument is favoured over NaN when determining which argument to return.
 
-  notes:
-    - IEEE compliant. Supports denormals, round mode, exception flags, saturation
-    - >
-      Denorm flushing for this operation is effectively controlled by the input denorm mode control: If input
-      denorm mode is disabling denorm, the internal result of a min/max operation cannot be a denorm value, so
-      output denorm mode is irrelevant. If input denorm mode is enabling denorm, the internal min/max result can
-      be a denorm and this operation outputs as a denorm regardless of output denorm mode
+# v_max_num_f64:
+#   encoding: vop2
+#   opcode: 14
+#   input_datatype: f64
+#   output_datatype: f64
+#   description: >
+#     Select the IEEE maximumNumber() of two single-precision float inputs and store the result into a vector register.
+#     A numeric argument is favoured over NaN when determining which argument to return.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - IEEE compliant. Supports denormals, round mode, exception flags, saturation
+#     - >
+#       Denorm flushing for this operation is effectively controlled by the input denorm mode control: If input
+#       denorm mode is disabling denorm, the internal result of a min/max operation cannot be a denorm value, so
+#       output denorm mode is irrelevant. If input denorm mode is enabling denorm, the internal min/max result can
+#       be a denorm and this operation outputs as a denorm regardless of output denorm mode
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_max_u32:
-  encoding: vop2
-  opcode: 20
-  input_datatype: u32
-  output_datatype: u32
-  description: >
-    Select the maximum of two unsigned 32-bit integer inputs and store the selected value into a vector register
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes: []
+# v_max_u32:
+#   encoding: vop2
+#   opcode: 20
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: >
+#     Select the maximum of two unsigned 32-bit integer inputs and store the selected value into a vector register
 
-  operands:
-    outputs:
-      - vdst
+#   notes: []
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_min_i32:
-  encoding: vop2
-  opcode: 17
-  input_datatype: i32
-  output_datatype: i32
-  description: >
-    Select the minimum of two signed 32-bit integer inputs and store the selected value into a vector register
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes: []
+# v_min_i32:
+#   encoding: vop2
+#   opcode: 17
+#   input_datatype: i32
+#   output_datatype: i32
+#   description: >
+#     Select the minimum of two signed 32-bit integer inputs and store the selected value into a vector register
 
-  operands:
-    outputs:
-      - vdst
+#   notes: []
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
+
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
 v_min_num_f16:
   encoding: vop2
@@ -905,9 +940,11 @@ v_min_num_f16:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_min_num_f16 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_min_num_f16 %0, %1, %0"
 
 v_min_num_f32:
   encoding: vop2
@@ -945,81 +982,83 @@ v_min_num_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_min_num_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_min_num_f32 %0, %1, %0"
 
-v_min_num_f64:
-  encoding: vop2
-  opcode: 13
-  input_datatype: f64
-  output_datatype: f64
-  description: >
-    Select the IEEE minimumNumber() of two single-precision float inputs and store the result into a vector
-    register.
-    A numeric argument is favoured over NaN when determining which argument to return.
+# v_min_num_f64:
+#   encoding: vop2
+#   opcode: 13
+#   input_datatype: f64
+#   output_datatype: f64
+#   description: >
+#     Select the IEEE minimumNumber() of two single-precision float inputs and store the result into a vector
+#     register.
+#     A numeric argument is favoured over NaN when determining which argument to return.
 
-  notes:
-    - IEEE compliant. Supports denormals, round mode, exception flags, saturation.
-    - >
-      Denorm flushing for this operation is effectively controlled by the input denorm mode control: If input
-      denorm mode is disabling denorm, the internal result of a min/max operation cannot be a denorm value, so
-      output denorm mode is irrelevant. If input denorm mode is enabling denorm, the internal min/max result can
-      be a denorm and this operation outputs as a denorm regardless of output denorm mode.
+#   notes:
+#     - IEEE compliant. Supports denormals, round mode, exception flags, saturation.
+#     - >
+#       Denorm flushing for this operation is effectively controlled by the input denorm mode control: If input
+#       denorm mode is disabling denorm, the internal result of a min/max operation cannot be a denorm value, so
+#       output denorm mode is irrelevant. If input denorm mode is enabling denorm, the internal min/max result can
+#       be a denorm and this operation outputs as a denorm regardless of output denorm mode.
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-v_min_u32:
-  encoding: vop2
-  opcode: 19
-  input_datatype: u32
-  output_datatype: u32
-  description: >
-    Select the minimum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
+# v_min_u32:
+#   encoding: vop2
+#   opcode: 19
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: >
+#     Select the minimum of two unsigned 32-bit integer inputs and store the selected value into a vector register.
 
-  notes: []
+#   notes: []
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
 v_mul_dx9_zero_f32:
   encoding: vop2
@@ -1050,9 +1089,11 @@ v_mul_dx9_zero_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_mul_dx9_zero_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_mul_dx9_zero_f32 %0, %1, %0"
 
 v_mul_f16:
   encoding: vop2
@@ -1083,9 +1124,11 @@ v_mul_f16:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_mul_f16 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_mul_f16 %0, %1, %0"
 
 v_mul_f32:
   encoding: vop2
@@ -1116,298 +1159,304 @@ v_mul_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_mul_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_mul_f32 %0, %1, %0"
 
-v_mul_f64:
-  encoding: vop2
-  opcode: 6
-  input_datatype: f64
-  output_datatype: f64
-  description: >
-    Multiply two floating point inputs and store the result into a vector register.
 
-  notes:
-    - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation.
+# v_mul_f64:
+#   encoding: vop2
+#   opcode: 6
+#   input_datatype: f64
+#   output_datatype: f64
+#   description: >
+#     Multiply two floating point inputs and store the result into a vector register.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - 0.5ULP precision. Supports denormals, round mode, exception flags and saturation.
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_mul_hi_i32_i24:
-  encoding: vop2
-  opcode: 10
-  input_datatype: i24
-  output_datatype: i32
-  description: >
-    Multiply two signed 24-bit integer inputs and store the high 32 bits of the result as a signed 32-bit integer into a
-    vector register.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - See also V_MUL_I32_I24.
+# v_mul_hi_i32_i24:
+#   encoding: vop2
+#   opcode: 10
+#   input_datatype: i24
+#   output_datatype: i32
+#   description: >
+#     Multiply two signed 24-bit integer inputs and store the high 32 bits of the result as a signed 32-bit integer into a
+#     vector register.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - See also V_MUL_I32_I24.
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_mul_hi_u32_u24:
-  encoding: vop2
-  opcode: 12
-  input_datatype: u24
-  output_datatype: u32
-  description: >
-    Multiply two unsigned 24-bit integer inputs and store the high 32 bits of the result as an unsigned 32-bit integer
-    into a vector register.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - See also V_MUL_U32_U24.
+# v_mul_hi_u32_u24:
+#   encoding: vop2
+#   opcode: 12
+#   input_datatype: u24
+#   output_datatype: u32
+#   description: >
+#     Multiply two unsigned 24-bit integer inputs and store the high 32 bits of the result as an unsigned 32-bit integer
+#     into a vector register.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - See also V_MUL_U32_U24.
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_mul_i32_i24:
-  encoding: vop2
-  opcode: 9
-  input_datatype: i24
-  output_datatype: i32
-  description: >
-    Multiply two signed 24-bit integer inputs and store the result as a signed 32-bit integer into a vector register.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - >
-      This opcode is expected to be as efficient as basic single-precision opcodes since it utilizes the single-precision
-      floating point multiplier. See also V_MUL_HI_I32_I24.
+# v_mul_i32_i24:
+#   encoding: vop2
+#   opcode: 9
+#   input_datatype: i24
+#   output_datatype: i32
+#   description: >
+#     Multiply two signed 24-bit integer inputs and store the result as a signed 32-bit integer into a vector register.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - >
+#       This opcode is expected to be as efficient as basic single-precision opcodes since it utilizes the single-precision
+#       floating point multiplier. See also V_MUL_HI_I32_I24.
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_mul_u32_u24:
-  encoding: vop2
-  opcode: 11
-  input_datatype: u24
-  output_datatype: u32
-  description: >
-    Multiply two unsigned 24-bit integer inputs and store the result as an unsigned 32-bit integer into a vector
-    register.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - >
-      This opcode is expected to be as efficient as basic single-precision opcodes since it utilizes the single-precision
-      floating point multiplier. See also V_MUL_HI_U32_U24.
+# v_mul_u32_u24:
+#   encoding: vop2
+#   opcode: 11
+#   input_datatype: u24
+#   output_datatype: u32
+#   description: >
+#     Multiply two unsigned 24-bit integer inputs and store the result as an unsigned 32-bit integer into a vector
+#     register.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - >
+#       This opcode is expected to be as efficient as basic single-precision opcodes since it utilizes the single-precision
+#       floating point multiplier. See also V_MUL_HI_U32_U24.
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_or_b32:
-  encoding: vop2
-  opcode: 28
-  input_datatype: b32
-  output_datatype: b32
-  description: >
-    Calculate bitwise OR on two vector inputs and store the result into a vector register.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - Input and output modifiers not supported.
+# v_or_b32:
+#   encoding: vop2
+#   opcode: 28
+#   input_datatype: b32
+#   output_datatype: b32
+#   description: >
+#     Calculate bitwise OR on two vector inputs and store the result into a vector register.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - Input and output modifiers not supported.
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_pk_fmac_f16:
-  encoding: vop2
-  opcode: 60
-  input_datatype: f16
-  output_datatype: f16
-  description: >
-    Multiply two packed half-precision float inputs component-wise and accumulate the result into the destination
-    register using fused multiply add.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - VOP2 version of V_PK_FMA_F16 with third source VGPR address is the destination.
+# v_pk_fmac_f16:
+#   encoding: vop2
+#   opcode: 60
+#   input_datatype: f16
+#   output_datatype: f16
+#   description: >
+#     Multiply two packed half-precision float inputs component-wise and accumulate the result into the destination
+#     register using fused multiply add.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - VOP2 version of V_PK_FMA_F16 with third source VGPR address is the destination.
 
-    inputs:
-      - src0
-      - vsrc1
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - vdst
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
-    - name: vdst_to_vdst
-      producer: vdst
-      consumer: vdst
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_subrev_co_ci_u32:
-  encoding: vop2
-  opcode: 34
-  input_datatype: u32
-  output_datatype: u32
-  description: >
-    Subtract the first unsigned 32-bit integer input from the second input, subtract a bit from the carry-in mask,
-    store the result into a vector register and store the carry-out mask into a scalar register.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#     - name: vdst_to_vdst
+#       producer: vdst
+#       consumer: vdst
 
-  notes:
-    - >
-      In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at
-      S2.u.
-    - Supports saturation (unsigned 32-bit integer domain).
+# v_subrev_co_ci_u32:
+#   encoding: vop2
+#   opcode: 34
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: >
+#     Subtract the first unsigned 32-bit integer input from the second input, subtract a bit from the carry-in mask,
+#     store the result into a vector register and store the carry-out mask into a scalar register.
 
-  operands:
-    outputs:
-      - vdst
-      - sdst
+#   notes:
+#     - >
+#       In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at
+#       S2.u.
+#     - Supports saturation (unsigned 32-bit integer domain).
 
-    inputs:
-      - src0
-      - vsrc1
-      - vcc
+#   operands:
+#     outputs:
+#       - vdst
+#       - sdst
 
-  special_state:
-    reads:
-      - name: vcc
-        role: carry_in
-    writes:
-      - name: sdst
-        role: carry_out
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - vcc
 
-  syntax: "vdst, sdst, src0:m, vsrc1:m, vcc:m"
+#   special_state:
+#     reads:
+#       - name: vcc
+#         role: carry_in
+#     writes:
+#       - name: sdst
+#         role: carry_out
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
-    - name: sdst_to_vcc
-      producer: sdst
-      consumer: vcc
+#   syntax: "vdst, sdst, src0:m, vsrc1:m, vcc:m"
+
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#       instruction_format: "v_subrev_co_ci_u32 %0, %1, %0, %2, %3"
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#       instruction_format: "v_subrev_co_ci_u32 %0, %1, %2, %0, %3"
+#     - name: sdst_to_vcc
+#       producer: sdst
+#       consumer: vcc
+#       instruction_format: "v_subrev_co_ci_u32 %0, %1, %2, %3, %1"
 
 v_subrev_f16:
   encoding: vop2
@@ -1438,9 +1487,11 @@ v_subrev_f16:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_subrev_f16 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_subrev_f16 %0, %1, %0"
 
 v_subrev_f32:
   encoding: vop2
@@ -1471,87 +1522,93 @@ v_subrev_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_subrev_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_subrev_f32 %0, %1, %0"
 
-v_subrev_nc_u32:
-  encoding: vop2
-  opcode: 39
-  input_datatype: u32
-  output_datatype: u32
-  description: >
-    Subtract the first unsigned 32-bit integer input from the second input and store the result into a vector register.
-    No carry-in or carry-out support.
 
-  notes:
-    - Supports saturation (unsigned 32-bit integer domain).
+# v_subrev_nc_u32:
+#   encoding: vop2
+#   opcode: 39
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: >
+#     Subtract the first unsigned 32-bit integer input from the second input and store the result into a vector register.
+#     No carry-in or carry-out support.
 
-  operands:
-    outputs:
-      - vdst
+#   notes:
+#     - Supports saturation (unsigned 32-bit integer domain).
 
-    inputs:
-      - src0
-      - vsrc1
+#   operands:
+#     outputs:
+#       - vdst
 
-  special_state:
-    reads: []
-    writes: []
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   special_state:
+#     reads: []
+#     writes: []
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-v_sub_co_ci_u32:
-  encoding: vop2
-  opcode: 33
-  input_datatype: u32
-  output_datatype: u32
-  description: >
-    Subtract the second unsigned 32-bit integer input from the first input, subtract a bit from the carry-in mask,
-    store the result into a vector register and store the carry-out mask into a scalar register.
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-  notes:
-    - In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u.
-    - Supports saturation (unsigned 32-bit integer domain).
+# v_sub_co_ci_u32:
+#   encoding: vop2
+#   opcode: 33
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: >
+#     Subtract the second unsigned 32-bit integer input from the first input, subtract a bit from the carry-in mask,
+#     store the result into a vector register and store the carry-out mask into a scalar register.
 
-  operands:
-    outputs:
-      - vdst
-      - sdst
+#   notes:
+#     - In VOP3 the VCC destination may be an arbitrary SGPR-pair, and the VCC source comes from the SGPR-pair at S2.u.
+#     - Supports saturation (unsigned 32-bit integer domain).
 
-    inputs:
-      - src0
-      - vsrc1
-      - vcc
+#   operands:
+#     outputs:
+#       - vdst
+#       - sdst
 
-  special_state:
-    reads:
-      - name: vcc
-        role: carry_in
-    writes:
-      - name: sdst
-        role: carry_out
+#     inputs:
+#       - src0
+#       - vsrc1
+#       - vcc
 
-  syntax: "vdst, sdst, src0:m, vsrc1:m, vcc:m"
+#   special_state:
+#     reads:
+#       - name: vcc
+#         role: carry_in
+#     writes:
+#       - name: sdst
+#         role: carry_out
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
-    - name: sdst_to_vcc
-      producer: sdst
-      consumer: vcc
+#   syntax: "vdst, sdst, src0:m, vsrc1:m, vcc:m"
+
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#       instruction_format: "v_sub_co_ci_u32 %0, %1, %0, %2, %3"
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
+#       instruction_format: "v_sub_co_ci_u32 %0, %1, %2, %0, %3"
+#     - name: sdst_to_vcc
+#       producer: sdst
+#       consumer: vcc
+#       instruction_format: "v_sub_co_ci_u32 %0, %1, %2, %3, %1"
 
 v_sub_f16:
   encoding: vop2
@@ -1582,9 +1639,11 @@ v_sub_f16:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_sub_f16 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_sub_f16 %0, %1, %0"
 
 v_sub_f32:
   encoding: vop2
@@ -1615,104 +1674,106 @@ v_sub_f32:
     - name: vdst_to_src0
       producer: vdst
       consumer: src0
+      instruction_format: "v_sub_f32 %0, %0, %1"
     - name: vdst_to_vsrc1
       producer: vdst
       consumer: vsrc1
+      instruction_format: "v_sub_f32 %0, %1, %0"
 
-v_sub_nc_u32:
-  encoding: vop2
-  opcode: 38
-  input_datatype: u32
-  output_datatype: u32
-  description: >
-    Subtract the second unsigned 32-bit integer input from the first input and store the result into a vector register.
-    No carry-in or carry-out support.
+# v_sub_nc_u32:
+#   encoding: vop2
+#   opcode: 38
+#   input_datatype: u32
+#   output_datatype: u32
+#   description: >
+#     Subtract the second unsigned 32-bit integer input from the first input and store the result into a vector register.
+#     No carry-in or carry-out support.
 
-  notes:
-    - Supports saturation (unsigned 32-bit integer domain).
+#   notes:
+#     - Supports saturation (unsigned 32-bit integer domain).
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-v_xnor_b32:
-  encoding: vop2
-  opcode: 30
-  input_datatype: b32
-  output_datatype: b32
-  description: >
-    Calculate bitwise XNOR on two vector inputs and store the result into a vector register.
+# v_xnor_b32:
+#   encoding: vop2
+#   opcode: 30
+#   input_datatype: b32
+#   output_datatype: b32
+#   description: >
+#     Calculate bitwise XNOR on two vector inputs and store the result into a vector register.
 
-  notes:
-    - Input and output modifiers not supported.
+#   notes:
+#     - Input and output modifiers not supported.
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1
 
-v_xor_b32:
-  encoding: vop2
-  opcode: 29
-  input_datatype: b32
-  output_datatype: b32
-  description: Calculate bitwise XOR on two vector inputs and store the result into a vector register.
+# v_xor_b32:
+#   encoding: vop2
+#   opcode: 29
+#   input_datatype: b32
+#   output_datatype: b32
+#   description: Calculate bitwise XOR on two vector inputs and store the result into a vector register.
 
-  notes: []
+#   notes: []
 
-  operands:
-    outputs:
-      - vdst
+#   operands:
+#     outputs:
+#       - vdst
 
-    inputs:
-      - src0
-      - vsrc1
+#     inputs:
+#       - src0
+#       - vsrc1
 
-  special_state:
-    reads: []
-    writes: []
+#   special_state:
+#     reads: []
+#     writes: []
 
-  syntax: "vdst, src0:m, vsrc1:m"
+#   syntax: "vdst, src0:m, vsrc1:m"
 
-  latency_paths:
-    - name: vdst_to_src0
-      producer: vdst
-      consumer: src0
-    - name: vdst_to_vsrc1
-      producer: vdst
-      consumer: vsrc1
+#   latency_paths:
+#     - name: vdst_to_src0
+#       producer: vdst
+#       consumer: src0
+#     - name: vdst_to_vsrc1
+#       producer: vdst
+#       consumer: vsrc1

@@ -1,8 +1,17 @@
 from .validator import VOP2Instructions, VOP2Instruction
-from .templates.vector_binary_f32 import VECTOR_BINARY_TEMPLATE_F32
 from .templates.vector_binary_f64 import VECTOR_BINARY_TEMPLATE_F64
+from .templates.vector_binary_u32 import VECTOR_BINARY_TEMPLATE_U32
+from .templates.vector_binary_i32 import VECTOR_BINARY_TEMPLATE_I32
 from .templates.vector_binary_literal_f16 import VECTOR_BINARY_LITERAL_TEMPLATE_F16
-from .templates.carry_u32 import CARRY_TEMPLATE_U32
+from .templates.vector_binary_literal_f32 import VECTOR_BINARY_LITERAL_TEMPLATE_F32
+from .templates.vector_carry_u32 import VECTOR_CARRY_TEMPLATE_U32
+from .templates.co_ci import VECTOR_BINARY_TEMPLATE_CO_CI
+
+from .templates.vdst_src0_vsrc1_f16 import VECTOR_BINARY_TEMPLATE_F16
+from .templates.vdst_src0_vsrc1_f32 import VECTOR_BINARY_TEMPLATE_F32
+from .templates.vdst_src0_vsrc1_b32 import VECTOR_BINARY_TEMPLATE_B32
+
+
 from pathlib import Path
 
 import subprocess
@@ -28,6 +37,14 @@ REGISTER_WIDTH = {
     "b64": 64,
 }
 
+LITERALS = {
+    "f16": "0x3c00",      # 1.0 in IEEE FP16
+    "f32": "0x3f800000",  # 1.0 in IEEE FP32
+    "u32": "1",
+    "i32": "1",
+    "b32": "0x00000001",
+}
+
 EXPERIMENTS = {
     "vdst_to_src0": {
         "family": "vector_binary",
@@ -48,13 +65,108 @@ EXPERIMENTS = {
 }
 
 TEMPLATES = {
-    ("vector_binary", 32): VECTOR_BINARY_TEMPLATE_F32,
-    ("vector_binary", 64): VECTOR_BINARY_TEMPLATE_F64,
-    ("vector_binary_literal", 32): VECTOR_BINARY_LITERAL_TEMPLATE_F16,
-    ("carry", 32): CARRY_TEMPLATE_U32,
+    "v_add_co_ci_u32": VECTOR_BINARY_TEMPLATE_CO_CI,
+    "v_subrev_co_ci_u32": VECTOR_BINARY_TEMPLATE_CO_CI,
+    "v_sub_co_ci_u32": VECTOR_BINARY_TEMPLATE_CO_CI,
+    "v_add_f16": VECTOR_BINARY_TEMPLATE_F16,
+    "v_add_f32": VECTOR_BINARY_TEMPLATE_F32,
+    "v_add_f64": VECTOR_BINARY_TEMPLATE_F64,
+    "v_add_nc_u32": VECTOR_BINARY_TEMPLATE_U32,
+    "v_and_b32": VECTOR_BINARY_TEMPLATE_B32,
 }
 
-def get_register_width(instruction: VOP2Instruction) -> str:
+TEMPLATES = {
+    "VDST_SRC0_VSRC1_F16": VECTOR_BINARY_TEMPLATE_F16,
+    "VDST_SRC0_VSRC1_F32": VECTOR_BINARY_TEMPLATE_F32,
+    "VDST_SRC0_VSRC1_B32": VECTOR_BINARY_TEMPLATE_B32,
+}
+
+
+INSTRUCTION_GROUPS = {
+    "VDST_SRC0_VSRC1_F16": {
+        "v_add_f16",
+        "v_ldexp_f16",
+        "v_max_num_f16",
+        "v_min_num_f16",
+        "v_mul_f16",
+        "v_subrev_f16",
+        "v_sub_f16",
+    },
+
+    "VDST_SRC0_VSRC1_F32": {
+        "v_add_f32",
+        "v_cvt_pk_rtz_f16_f32",
+        "v_max_num_f32",
+        "v_min_num_f32",
+        "v_mul_dx9_zero_f32",
+        "v_mul_f32",
+        "v_subrev_f32",
+        "v_sub_f32",
+    },
+
+    "VDST_SRC0_VSRC1_F64": {
+        "todo"
+    },
+
+    "VDST_SRC0_VSRC1_B32": {
+        "v_and_b32",
+        "v_lshlrev_b32"
+    },
+
+    "VDST_SRC0_VSRC1_B64": {
+        "v_lshlrev_b64"
+    },
+
+    "VDST_SRC0_VSRC1_U32": {
+        "todo"
+    },
+
+    "VDST_SRC0_VSRC1_I32": {
+        "todo"
+    },
+
+    "VDST_SRC0_VSRC1_LITERAL_F16": {
+        "todo"
+    },
+
+    "VDST_SRC0_VSRC1_LITERAL_F32": {
+        "todo"
+    },
+
+    "VDST_SRC0_LITERAL_VSRC1_F16": {
+        "v_fmamk_f16"
+    },
+
+    "VDST_SRC0_LITERAL_VSRC1_F32": {
+        "v_fmamk_f32"
+    },
+
+    "VDST_SRC0_VSCR1_VCC_B32": {
+        "todo"
+    },
+
+    "VDST_SDST_SRC0_VSRC1_VCC_U32": {
+        "todo"
+    },
+}
+
+INSTRUCTION_TO_TEMPLATE = {
+    instruction: template_name
+    for template_name, instructions in INSTRUCTION_GROUPS.items()
+    for instruction in instructions
+}
+
+def get_template(instruction_name):
+    try:
+        template_name = INSTRUCTION_TO_TEMPLATE[instruction_name]
+    except KeyError:
+        raise ValueError(
+            f"No template for instruction: {instruction_name}"
+        )
+
+    return TEMPLATES[template_name]
+
+def get_register_width(instruction: VOP2Instruction) -> int:
     try:
         return REGISTER_WIDTH[instruction.input_datatype]
     except KeyError as exc:
@@ -73,40 +185,19 @@ with open("/home/kane/Projects/rdna4-emulator/metadata/isa/vop2.yaml", "r") as f
 instructions = VOP2Instructions.model_validate(raw)
 for instruction_name, instruction in instructions.root.items():
     for experiment in instruction.latency_paths:
-        print(f"Instruction: {instruction_name}, experiment: {experiment}")
+        print(f"Instruction:      {instruction_name}, experiment: {experiment}")
         try:
-            config = EXPERIMENTS[experiment.name]
-            family = config["family"]
-            instruction_format = config["instruction"]
-
-            format_args = {
-                "instruction": instruction_name
-            }
-
-            if "literal" in instruction.syntax:
-                family += "_literal"
-                instruction_format += ", {literal}"
-                format_args["literal"] = "0x3c00"
-
-            instruction_text = instruction_format.format(**format_args)
-            register_width = get_register_width(instruction)
-
+            template = get_template(instruction_name)
         except KeyError as exc:
             raise ValueError(
-                f"Unsupported experiment {experiment.name}"
+                f"Unsupported (family, register_width): ({family}, {instruction.input_datatype})"
+                # f"Unsupported (family, register_width): ({family}, {register_width})"
             ) from exc
 
-        try:
-            template = TEMPLATES[(family, register_width)]
-
-        except KeyError as exc:
-            raise ValueError(
-                f"Unsupported (family, register_width): ({family}, {register_width})"
-            ) from exc
-
-        for count in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
+        # for count in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
+        for count in [1]:
             instructions_text = "\n".join(
-                f'        "{instruction_text}\\n\\t"'
+                f'        "{experiment.instruction_format}\\n\\t"'
                 for _ in range(count)
             )
 
