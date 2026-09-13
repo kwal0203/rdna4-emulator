@@ -1,6 +1,7 @@
-VDST_SRC0_VSRC1_LITERAL_F32 = r'''
+VDST_SRC0_VSRC1_CARRY_FALSE_B32 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
+#include <cstdint>
 
 #define HIP_CHECK(call)                                 \
     do {{                                                \
@@ -13,14 +14,16 @@ VDST_SRC0_VSRC1_LITERAL_F32 = r'''
 
 __global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    float x = 1.0f;
-    float y = 2.0f;
+    uint32_t x = 0x12345678u; // 305419896
+    uint32_t y = 0x0f0f0f0fu; // 252645135
+
+    asm volatile("s_mov_b32 vcc_lo, -1");
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 
     asm volatile(
 {instructions}
-        : "+v"(x)
+        : "+&v"(x)
         : "v"(y));
 
     uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;

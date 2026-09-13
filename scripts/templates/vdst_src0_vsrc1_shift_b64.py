@@ -1,4 +1,4 @@
-VECTOR_BINARY_LITERAL_TEMPLATE_F16 = r'''
+VDST_SRC0_VSRC1_SHIFT_B64 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
 #include <cstdint>
@@ -14,15 +14,15 @@ VECTOR_BINARY_LITERAL_TEMPLATE_F16 = r'''
 
 __global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    uint32_t x = 0x3c00; // f16 1.0
-    uint32_t y = 0x4000; // f16 2.0
+    uint64_t value = 0x12345678ull; // 305419896
+    uint32_t shift = 1u;            // 1
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 
     asm volatile(
 {instructions}
-        : "+v"(x)
-        : "v"(y));
+        : "+&v"(value)
+        : "v"(shift));
 
     uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;
 

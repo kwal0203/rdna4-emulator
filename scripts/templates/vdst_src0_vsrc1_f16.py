@@ -21,7 +21,7 @@ __global__ void {instruction_name}_bench(uint32_t *out)
 
     asm volatile(
 {instructions}
-        : "+v"(x)
+        : "+&v"(x)
         : "v"(y));
 
     uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;

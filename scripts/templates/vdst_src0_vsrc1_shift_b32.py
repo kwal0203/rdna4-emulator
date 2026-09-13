@@ -1,6 +1,7 @@
-VECTOR_BINARY_TEMPLATE_F64 = r'''
+VDST_SRC0_VSRC1_SHIFT_B32 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
+#include <cstdint>
 
 #define HIP_CHECK(call)                                 \
     do {{                                                \
@@ -13,15 +14,15 @@ VECTOR_BINARY_TEMPLATE_F64 = r'''
 
 __global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    double x = 1.0f;
-    double y = 2.0f;
+    uint32_t value = 0x12345678u; // 305419896
+    uint32_t shift = 1u;          // 1
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 
     asm volatile(
 {instructions}
-        : "+v"(x)
-        : "v"(y));
+        : "+&v"(value)
+        : "v"(shift));
 
     uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;
 

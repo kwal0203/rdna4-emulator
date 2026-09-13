@@ -14,14 +14,14 @@ VDST_SRC0_VSRC1_B32 = r'''
 
 __global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    uint32_t x = 0x12345678u;
-    uint32_t y = 0x0f0f0f0fu;
+    uint32_t x = 0x12345678u; // 305419896
+    uint32_t y = 0x0f0f0f0fu; // 252645135
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 
     asm volatile(
 {instructions}
-        : "+v"(x)
+        : "+&v"(x)
         : "v"(y));
 
     uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;

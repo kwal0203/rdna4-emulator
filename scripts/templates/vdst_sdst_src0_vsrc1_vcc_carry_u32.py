@@ -1,4 +1,4 @@
-VDST_SDST_SRC0_VSRC1_VCC_U32 = r'''
+VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
 #include <cstdint>
@@ -23,7 +23,7 @@ __global__ void {instruction_name}_bench(uint32_t *out)
 
     asm volatile(
     {instructions}
-        : "+&v"(result), "+&s"(carry)
+        : "=&v"(result), "+&s"(carry)
         : "v"(x), "v"(y)
     );
 

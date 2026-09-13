@@ -2,37 +2,52 @@ from .templates.vdst_src0_vsrc1_f16 import VDST_SRC0_VSRC1_F16
 from .templates.vdst_src0_vsrc1_f32 import VDST_SRC0_VSRC1_F32
 from .templates.vdst_src0_vsrc1_f64 import VDST_SRC0_VSRC1_F64
 from .templates.vdst_src0_vsrc1_b32 import VDST_SRC0_VSRC1_B32
-from .templates.vdst_src0_vsrc1_b64 import VDST_SRC0_VSRC1_B64
 from .templates.vdst_src0_vsrc1_u32 import VDST_SRC0_VSRC1_U32
 from .templates.vdst_src0_vsrc1_i32 import VDST_SRC0_VSRC1_I32
-from .templates.vdst_src0_vsrc1_carry_u32 import VDST_SRC0_VSRC1_CARRY_U32
-from .templates.vdst_src0_vsrc1_literal_f16 import VDST_SRC0_VSRC1_LITERAL_F16
-from .templates.vdst_src0_vsrc1_literal_f32 import VDST_SRC0_VSRC1_LITERAL_F32
-from .templates.vdst_src0_literal_vsrc1_f16 import VDST_SRC0_LITERAL_VSRC1_F16
-from .templates.vdst_src0_literal_vsrc1_f32 import VDST_SRC0_LITERAL_VSRC1_F32
 from .templates.vdst_sdst_src0_vsrc1_vcc_vector_u32 import VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32
 from .templates.vdst_sdst_src0_vsrc1_vcc_carry_u32 import VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32
+from .templates.vdst_src0_vsrc1_shift_i32 import VDST_SRC0_VSRC1_SHIFT_I32
+from .templates.vdst_src0_vsrc1_carry_false_b32 import VDST_SRC0_VSRC1_CARRY_FALSE_B32
+from .templates.vdst_src0_vsrc1_carry_true_b32 import VDST_SRC0_VSRC1_CARRY_TRUE_B32
+from .templates.vdst_src0_vsrc1_shift_b32 import VDST_SRC0_VSRC1_SHIFT_B32
+from .templates.vdst_src0_vsrc1_shift_b64 import VDST_SRC0_VSRC1_SHIFT_B64
 
-from pydantic import BaseModel, RootModel, model_validator, Field
+from pydantic import BaseModel, RootModel, model_validator, Field, PrivateAttr
 from typing import Self
 import yaml
 
+
+# TEMPLATES = {
+#     "VDST_SRC0_VSRC1_F16": VDST_SRC0_VSRC1_F16,
+#     "VDST_SRC0_VSRC1_F32": VDST_SRC0_VSRC1_F32,
+#     "VDST_SRC0_VSRC1_F64": VDST_SRC0_VSRC1_F64,
+#     "VDST_SRC0_VSRC1_LITERAL_F16": VDST_SRC0_VSRC1_LITERAL_F16,
+#     "VDST_SRC0_VSRC1_LITERAL_F32": VDST_SRC0_VSRC1_LITERAL_F32,
+#     "VDST_SRC0_LITERAL_VSRC1_F16": VDST_SRC0_LITERAL_VSRC1_F16,
+#     "VDST_SRC0_LITERAL_VSRC1_F32": VDST_SRC0_LITERAL_VSRC1_F32,
+#     "VDST_SRC0_VSRC1_B32": VDST_SRC0_VSRC1_B32,
+#     "VDST_SRC0_VSRC1_B64": VDST_SRC0_VSRC1_B64,
+#     "VDST_SRC0_VSRC1_U32": VDST_SRC0_VSRC1_U32,
+#     "VDST_SRC0_VSRC1_I32": VDST_SRC0_VSRC1_I32,
+#     "VDST_SRC0_VSRC1_CARRY_U32": VDST_SRC0_VSRC1_CARRY_U32,
+#     "VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32": VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32,
+#     "VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32": VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32
+# }
 
 TEMPLATES = {
     "VDST_SRC0_VSRC1_F16": VDST_SRC0_VSRC1_F16,
     "VDST_SRC0_VSRC1_F32": VDST_SRC0_VSRC1_F32,
     "VDST_SRC0_VSRC1_F64": VDST_SRC0_VSRC1_F64,
-    "VDST_SRC0_VSRC1_LITERAL_F16": VDST_SRC0_VSRC1_LITERAL_F16,
-    "VDST_SRC0_VSRC1_LITERAL_F32": VDST_SRC0_VSRC1_LITERAL_F32,
-    "VDST_SRC0_LITERAL_VSRC1_F16": VDST_SRC0_LITERAL_VSRC1_F16,
-    "VDST_SRC0_LITERAL_VSRC1_F32": VDST_SRC0_LITERAL_VSRC1_F32,
     "VDST_SRC0_VSRC1_B32": VDST_SRC0_VSRC1_B32,
-    "VDST_SRC0_VSRC1_B64": VDST_SRC0_VSRC1_B64,
     "VDST_SRC0_VSRC1_U32": VDST_SRC0_VSRC1_U32,
     "VDST_SRC0_VSRC1_I32": VDST_SRC0_VSRC1_I32,
-    "VDST_SRC0_VSRC1_CARRY_U32": VDST_SRC0_VSRC1_CARRY_U32,
     "VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32": VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32,
-    "VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32": VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32
+    "VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32": VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32,
+    "VDST_SRC0_VSRC1_SHIFT_I32": VDST_SRC0_VSRC1_SHIFT_I32,
+    "VDST_SRC0_VSRC1_CARRY_FALSE_B32": VDST_SRC0_VSRC1_CARRY_FALSE_B32,
+    "VDST_SRC0_VSRC1_CARRY_TRUE_B32": VDST_SRC0_VSRC1_CARRY_TRUE_B32,
+    "VDST_SRC0_VSRC1_SHIFT_B32": VDST_SRC0_VSRC1_SHIFT_B32,
+    "VDST_SRC0_VSRC1_SHIFT_B64": VDST_SRC0_VSRC1_SHIFT_B64,
 }
 
 class Operands(BaseModel):
@@ -54,12 +69,12 @@ class LatencyPath(BaseModel):
     instruction_format: str
     template_name: str
 
-    template_str: str = Field(init=False, exclude=True)
+    _template_str: str = PrivateAttr()
 
     @model_validator(mode="after")
     def resolve_template(self) -> Self:
         try:
-            self.template_str = TEMPLATES[self.template_name]
+            self._template_str = TEMPLATES[self.template_name]
         except KeyError as exc:
             raise ValueError(
                 f"Unknown template: {self.template_name}"
@@ -67,6 +82,9 @@ class LatencyPath(BaseModel):
 
         return self
 
+    @property
+    def template_str(self) -> Self:
+        return self._template_str
 
 class VOP2Instruction(BaseModel):
     encoding: str

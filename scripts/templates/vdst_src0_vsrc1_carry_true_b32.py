@@ -1,4 +1,4 @@
-VECTOR_BINARY_TEMPLATE_B32 = r'''
+VDST_SRC0_VSRC1_CARRY_TRUE_B32 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
 #include <cstdint>
@@ -17,11 +17,13 @@ __global__ void {instruction_name}_bench(uint32_t *out)
     uint32_t x = 0x12345678u;
     uint32_t y = 0x0f0f0f0fu;
 
+    asm volatile("s_mov_b32 vcc_lo, 0");
+
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 
     asm volatile(
 {instructions}
-        : "+v"(x)
+        : "+&v"(x)
         : "v"(y));
 
     uint32_t end = __builtin_amdgcn_s_getreg(0xF81D);;

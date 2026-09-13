@@ -13,6 +13,15 @@ LITERALS = {
     "b32": "0x00000001",
 }
 
+# For your template naming, I'd use:
+
+# _F16 -> uint32_t containing f16 bits
+# _F32 -> float
+# _F64 -> double
+# _U32 -> uint32_t
+# _I32 -> int32_t
+# _B32 -> uint32_t
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--encoding", required=True, help="VOP2, VOP3 etc")
 parser.add_argument("--benchmark-type", required=True, help="Latency, throughput etc")
@@ -23,14 +32,13 @@ for instruction_name, instruction in instructions.root.items():
     for experiment in instruction.latency_paths:
         print(f"Instruction:      {instruction_name}, experiment: {experiment}")
 
-        # for count in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
-        for count in [1]:
+        for count in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
             instructions_text = "\n".join(
                 f'        "{experiment.instruction_format}\\n\\t"'
                 for _ in range(count)
             )
 
-            source = instruction.template_str.format(
+            source = experiment.template_str.format(
                 instruction_name=instruction_name,
                 instructions=instructions_text)
 
