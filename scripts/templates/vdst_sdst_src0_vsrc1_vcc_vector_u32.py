@@ -1,4 +1,4 @@
-VECTOR_BINARY_TEMPLATE_CO_CI = r'''
+VDST_SDST_SRC0_VSRC1_VCC_U32 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
 #include <cstdint>

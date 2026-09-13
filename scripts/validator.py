@@ -1,7 +1,39 @@
+from .templates.vdst_src0_vsrc1_f16 import VDST_SRC0_VSRC1_F16
+from .templates.vdst_src0_vsrc1_f32 import VDST_SRC0_VSRC1_F32
+from .templates.vdst_src0_vsrc1_f64 import VDST_SRC0_VSRC1_F64
+from .templates.vdst_src0_vsrc1_b32 import VDST_SRC0_VSRC1_B32
+from .templates.vdst_src0_vsrc1_b64 import VDST_SRC0_VSRC1_B64
+from .templates.vdst_src0_vsrc1_u32 import VDST_SRC0_VSRC1_U32
+from .templates.vdst_src0_vsrc1_i32 import VDST_SRC0_VSRC1_I32
+from .templates.vdst_src0_vsrc1_carry_u32 import VDST_SRC0_VSRC1_CARRY_U32
+from .templates.vdst_src0_vsrc1_literal_f16 import VDST_SRC0_VSRC1_LITERAL_F16
+from .templates.vdst_src0_vsrc1_literal_f32 import VDST_SRC0_VSRC1_LITERAL_F32
+from .templates.vdst_src0_literal_vsrc1_f16 import VDST_SRC0_LITERAL_VSRC1_F16
+from .templates.vdst_src0_literal_vsrc1_f32 import VDST_SRC0_LITERAL_VSRC1_F32
+from .templates.vdst_sdst_src0_vsrc1_vcc_vector_u32 import VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32
+from .templates.vdst_sdst_src0_vsrc1_vcc_carry_u32 import VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32
+
 from pydantic import BaseModel, RootModel, model_validator, Field
 from typing import Self
 import yaml
 
+
+TEMPLATES = {
+    "VDST_SRC0_VSRC1_F16": VDST_SRC0_VSRC1_F16,
+    "VDST_SRC0_VSRC1_F32": VDST_SRC0_VSRC1_F32,
+    "VDST_SRC0_VSRC1_F64": VDST_SRC0_VSRC1_F64,
+    "VDST_SRC0_VSRC1_LITERAL_F16": VDST_SRC0_VSRC1_LITERAL_F16,
+    "VDST_SRC0_VSRC1_LITERAL_F32": VDST_SRC0_VSRC1_LITERAL_F32,
+    "VDST_SRC0_LITERAL_VSRC1_F16": VDST_SRC0_LITERAL_VSRC1_F16,
+    "VDST_SRC0_LITERAL_VSRC1_F32": VDST_SRC0_LITERAL_VSRC1_F32,
+    "VDST_SRC0_VSRC1_B32": VDST_SRC0_VSRC1_B32,
+    "VDST_SRC0_VSRC1_B64": VDST_SRC0_VSRC1_B64,
+    "VDST_SRC0_VSRC1_U32": VDST_SRC0_VSRC1_U32,
+    "VDST_SRC0_VSRC1_I32": VDST_SRC0_VSRC1_I32,
+    "VDST_SRC0_VSRC1_CARRY_U32": VDST_SRC0_VSRC1_CARRY_U32,
+    "VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32": VDST_SDST_SRC0_VSRC1_VCC_VECTOR_U32,
+    "VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32": VDST_SDST_SRC0_VSRC1_VCC_CARRY_U32
+}
 
 class Operands(BaseModel):
     inputs: list[str]
@@ -20,6 +52,21 @@ class LatencyPath(BaseModel):
     producer: str
     consumer: str
     instruction_format: str
+    template_name: str
+
+    template_str: str = Field(init=False, exclude=True)
+
+    @model_validator(mode="after")
+    def resolve_template(self) -> Self:
+        try:
+            self.template_str = TEMPLATES[self.template_name]
+        except KeyError as exc:
+            raise ValueError(
+                f"Unknown template: {self.template_name}"
+            ) from exc
+
+        return self
+
 
 class VOP2Instruction(BaseModel):
     encoding: str
@@ -86,8 +133,8 @@ class VOP2Instructions(RootModel[dict[str, VOP2Instruction]]):
 
         return self
 
+def load_vop2_instructions(path: str) -> VOP2Instructions:
+    with open(path, "r") as f:
+        raw = yaml.safe_load(f)
 
-with open("/home/kane/Projects/rdna4-emulator/metadata/isa/vop2.yaml", "r") as f:
-    raw = yaml.safe_load(f)
-
-instructions = VOP2Instructions.model_validate(raw)
+    return VOP2Instructions.model_validate(raw)

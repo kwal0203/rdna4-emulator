@@ -1,4 +1,4 @@
-VECTOR_BINARY_TEMPLATE_I32 = r'''
+VDST_SRC0_VSRC1_U32 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
 #include <cstdint>
@@ -14,8 +14,8 @@ VECTOR_BINARY_TEMPLATE_I32 = r'''
 
 __global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    uint32_t x = 1;
-    uint32_t y = 2;
+    uint32_t x = 1u;
+    uint32_t y = 2u;
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 

@@ -1,4 +1,4 @@
-VDST_SRC0_VSRC1_F16 = r'''
+VDST_SRC0_VSRC1_B64 = r'''
 #include <hip/hip_runtime.h>
 #include <iostream>
 #include <cstdint>
@@ -14,8 +14,8 @@ VDST_SRC0_VSRC1_F16 = r'''
 
 __global__ void {instruction_name}_bench(uint32_t *out)
 {{
-    uint32_t x = 0x3c00;  // f16 1.0
-    uint32_t y = 0x4000;  // f16 2.0
+    double x = 1.0f;
+    double y = 2.0f;
 
     uint32_t start = __builtin_amdgcn_s_getreg(0xF81D);;
 
