@@ -5,8 +5,9 @@ import json
 import statistics
 
 
-INPUT_FILE = Path("results.jsonl")
-OUTPUT_FILE = Path("latency_results.jsonl")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+INPUT_FILE = REPO_ROOT / "results.jsonl"
+OUTPUT_FILE = REPO_ROOT / "latency_results.jsonl"
 
 # Require at least this many chain lengths before accepting a result.
 MIN_FIT_POINTS = 5

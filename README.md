@@ -29,19 +29,15 @@ Run the following commands from the repository root:
 uv sync --locked
 ```
 
-Before generating benchmarks, adjust the paths currently embedded in the scripts to match your checkout and ROCm installation:
-
-| File | Setting | Current value |
-| --- | --- | --- |
-| `scripts/generate_chain.py` | Metadata path passed to `load_vop2_instructions` | `/home/kane/Projects/rdna4-emulator/metadata/isa/vop2.yaml` |
-| `scripts/generate_chain.py` | `hipcc` | `/opt/rocm/core-10.0/bin/hipcc` |
-| `scripts/run_experiments.py` | `ROOT` | `/home/kane/Projects/rdna4-emulator/generated` |
+The scripts locate metadata, generated benchmarks, and result files relative to the repository root. No checkout-specific paths or `.env` file are needed. Make sure `hipcc` is available on your `PATH`, or pass its location with `--hipcc` when generating benchmarks.
 
 ### Generate and compile benchmarks
 
 ```bash
 uv run python -m scripts.generate_chain --encoding vop2 --benchmark-type latency
 ```
+
+For a compiler outside `PATH`, append `--hipcc /path/to/hipcc` to that command.
 
 This reads `metadata/isa/vop2.yaml` and compiles each configured latency path at every chain length. Generated HIP sources and executables are written under:
 

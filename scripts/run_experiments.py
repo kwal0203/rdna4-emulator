@@ -7,8 +7,9 @@ import statistics
 import subprocess
 
 
-ROOT = Path("/home/kane/Projects/rdna4-emulator/generated")
-OUTPUT_FILE = Path("results.jsonl")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+ROOT = REPO_ROOT / "generated"
+OUTPUT_FILE = REPO_ROOT / "results.jsonl"
 NUM_RUNS = 10
 
 cycle_re = re.compile(r"Cycles\s*=\s*(\d+)")
