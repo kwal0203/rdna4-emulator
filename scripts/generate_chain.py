@@ -5,23 +5,6 @@ import subprocess
 import argparse
 
 
-LITERALS = {
-    "f16": "0x3c00",      # 1.0 in IEEE FP16
-    "f32": "0x3f800000",  # 1.0 in IEEE FP32
-    "u32": "1",
-    "i32": "1",
-    "b32": "0x00000001",
-}
-
-# For your template naming, I'd use:
-
-# _F16 -> uint32_t containing f16 bits
-# _F32 -> float
-# _F64 -> double
-# _U32 -> uint32_t
-# _I32 -> int32_t
-# _B32 -> uint32_t
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--encoding", required=True, help="VOP2, VOP3 etc")
 parser.add_argument("--benchmark-type", required=True, help="Latency, throughput etc")
