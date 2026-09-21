@@ -11,6 +11,8 @@ namespace rdna4 {
  * structure with source and derived domains.
  */
 
+using Tick = uint64_t;
+
 class ClockDomain {
   public:
     ClockDomain(uint64_t period) : period_(period) {}
@@ -19,8 +21,10 @@ class ClockDomain {
 
     uint64_t cycles(uint64_t n) const { return n * period_; }
 
+    Tick cyclesToTicks(uint64_t cycles) const { return cycles * period(); }
+
   private:
-    uint64_t period_;
+    Tick period_;
 };
 
 } // namespace rdna4
