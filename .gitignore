@@ -13,3 +13,4 @@ generated/
 *.jsonl
 *.txt
 emulator/files.txt
+*.out
